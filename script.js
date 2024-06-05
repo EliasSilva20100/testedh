@@ -16,40 +16,26 @@ var db = firebase.firestore();
 var cadastroForm = document.getElementById("cadastroForm");
 
 // Evento de envio do formulário
-// Evento de envio do formulário
 cadastroForm.addEventListener("submit", function(event) {
     event.preventDefault(); // Evitar o comportamento padrão de envio do formulário
 
     // Pegar os valores dos campos do formulário
     var nome = document.getElementById("nome").value;
-    var email = document.getElementById("email").value;
-    var senha = document.getElementById("senha").value;
+    var telefone = document.getElementById("telefone").value;
+    var cpf = document.getElementById("cpf").value;
 
-    // Cadastrar o cliente no Firebase
-    firebase.auth().createUserWithEmailAndPassword(email, senha)
-        .then((userCredential) => {
-            // Cadastro de cliente bem-sucedido
-            var user = userCredential.user;
-            // Adicionar os dados do cliente ao Firestore
-            db.collection("clientes").doc(user.uid).set({
-                nome: nome,
-                email: email,
-                senha: senha
-            })
-            .then(() => {
-                console.log("Cliente cadastrado com sucesso:", user.uid);
-                // Redirecionar para a página de sucesso ou outra página desejada
-                window.location.href = "sucesso.html";
-            })
-            .catch((error) => {
-                console.error("Erro ao cadastrar cliente no Firestore:", error);
-            });
-        })
-        .catch((error) => {
-            // Lidar com erros de cadastro
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.error("Erro ao cadastrar cliente:", errorMessage);
-        });
+    // Adicionar os dados do cliente ao Firestore
+    db.collection("clientes").add({
+        nome: nome,
+        telefone: telefone,
+        cpf: cpf
+    })
+    .then((docRef) => {
+        console.log("Cliente cadastrado com ID:", docRef.id);
+        // Redirecionar para a página de sucesso ou outra página desejada
+        window.location.href = "sucesso.html";
+    })
+    .catch((error) => {
+        console.error("Erro ao cadastrar cliente no Firestore:", error);
+    });
 });
-
